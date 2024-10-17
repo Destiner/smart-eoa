@@ -1,0 +1,10 @@
+{
+  "name": "smart-eoa",
+  "type": "module",
+  "dependencies": {
+    "viem": "^2.21.29"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.11"
+  }
+}
