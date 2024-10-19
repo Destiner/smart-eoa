@@ -1,7 +1,7 @@
 import {
   Address,
   concat,
-  createWalletClient,
+  createClient,
   encodeAbiParameters,
   encodeFunctionData,
   Hex,
@@ -40,7 +40,7 @@ if (!sponsorPrivateKey) {
   throw new Error("SPONSOR_PRIVATE_KEY is required");
 }
 const sponsorAccount = privateKeyToAccount(sponsorPrivateKey);
-const sponsorClient = createWalletClient({
+const client = createClient({
   account: sponsorAccount,
   chain: odysseyTestnet,
   transport: http(),
@@ -158,7 +158,7 @@ const signatureHex = concat([
   `0x${(signature.v || 0n).toString(16)}`,
 ]);
 
-const txHash = await writeContract(sponsorClient, {
+const txHash = await writeContract(client, {
   address: ENTRY_POINT_0_7_0,
   abi: entryPoint070Abi,
   functionName: "handleOps",
