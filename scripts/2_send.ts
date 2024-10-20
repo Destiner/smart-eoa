@@ -10,7 +10,7 @@ import {
 } from "viem";
 import { odysseyTestnet } from "viem/chains";
 import { privateKeyToAccount, sign } from "viem/accounts";
-import { writeContract } from "viem/actions";
+import { readContract, writeContract } from "viem/actions";
 
 import entryPoint070Abi from "@/abi/entryPoint0_7_0.js";
 import kernelV3ImplementationAbi from "@/abi/kernelV3Implementation.js";
@@ -123,10 +123,16 @@ function getOpHash(chain: number, entryPoint: Address, op: Op_0_7): Hex | null {
   return keccak256(encoded);
 }
 
+const nonce = await readContract(client, {
+  address: ENTRY_POINT_0_7_0,
+  abi: entryPoint070Abi,
+  functionName: "getNonce",
+  args: [owner.address, 0n],
+});
+
 const op: Op_0_7 = {
   sender: owner.address,
-  // Fix: bump automatically
-  nonce: 0n,
+  nonce,
   // Should be already initialized
   initCode: "0x",
   callData,
