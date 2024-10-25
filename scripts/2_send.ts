@@ -2,6 +2,7 @@ import {
   Address,
   concat,
   createClient,
+  createPublicClient,
   encodeAbiParameters,
   encodeFunctionData,
   Hex,
@@ -38,8 +39,6 @@ const ENTRY_POINT_0_7_0 = "0x0000000071727de22e5e9d8baf0edac6f37da032";
 const callGasLimit = 327680n;
 const verificationGasLimit = 1048576n;
 const preVerificationGas = 100000n;
-const maxPriorityFeePerGas = 1500000000n;
-const maxFeePerGas = 2000000000n;
 
 const ownerPrivateKey = process.env.OWNER_PRIVATE_KEY as Hex | undefined;
 if (!ownerPrivateKey) {
@@ -53,7 +52,7 @@ if (!bundlerRpc) {
   throw new Error("BUNDLER_RPC is required");
 }
 
-const client = createClient({
+const client = createPublicClient({
   chain: odysseyTestnet,
   transport: http(),
 });
@@ -112,6 +111,9 @@ const nonce = await readContract(client, {
   functionName: "getNonce",
   args: [owner.address, 0n],
 });
+
+const { maxFeePerGas, maxPriorityFeePerGas } =
+  await client.estimateFeesPerGas();
 
 const op: Op_0_7 = {
   sender: owner.address,
